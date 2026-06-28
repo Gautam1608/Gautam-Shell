@@ -9,7 +9,7 @@ def execute_builtin(command_args):
     if command_args[0] == "exit":
         sys.exit()
     elif command_args[0] == "echo":
-        [sys.stdout.write(args+" ") for args in command_args]
+        [sys.stdout.write(args+" ") for args in command_args[1:]]
         print()
     elif command_args[0] == "type":
         if command_args[1] in builtin:
