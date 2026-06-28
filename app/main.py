@@ -1,5 +1,5 @@
 import sys
-
+import os
 
 def main():
     builtin=["exit", "echo", "type"]
@@ -18,7 +18,14 @@ def main():
                 if command_args[0] in builtin:
                     print(f"{command_args[0]} is a shell builtin")
                 else:
-                    print(f"{command_args[0]}: not found")
+                    paths = os.environ['PATH']
+                    path_list = paths.split(os.pathsep)
+                    for path in path_list:
+                        if os.access(os.path.join(path,command_args[0]), os.X_OK):
+                            print(f"{command_args[0]} is {os.path.join(path,command_args[0])}")
+                            break
+                    else:
+                        print(f"{command_args[0]}: not found")
         else:
             print(f"{command}: command not found")
 
