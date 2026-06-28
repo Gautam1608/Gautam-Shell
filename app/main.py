@@ -2,13 +2,15 @@ import sys
 
 
 def main():
-    commands=[]
-    sys.stdout.write("$ ")
-    x = input()
-    if x.split(" ")[0] in commands:
-        ...
-    else:
-        sys.stdout.write(x.split()[0] + ": command not found")
+    command_list=[]
+    while True:
+        sys.stdout.write("$ ")
+        command = input()
+        if command.split(" ")[0] in command_list:
+            ...
+        else:
+            print(f"{command.split(" ")[0]}: command not found")
+
 
 
 if __name__ == "__main__":
