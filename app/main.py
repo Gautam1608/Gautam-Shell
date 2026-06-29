@@ -4,7 +4,7 @@ import shutil
 import shlex
 import subprocess
 
-builtin=["exit", "echo", "type", "pwd"]
+builtin=["exit", "echo", "type", "pwd","cd"]
 def execute_builtin(tokens):
      match tokens[0]:
         case "exit":
@@ -22,6 +22,11 @@ def execute_builtin(tokens):
                     print(f"{tokens[1]}: not found")
         case "pwd":
             print(os.getcwd())
+        case "cd":
+            try:
+                os.chdir(tokens[1])
+            except FileNotFoundError as e:
+                print(f"cd: {tokens[1]}: No such file or directory")
 def main():
     while True:
         sys.stdout.write("$ ")
