@@ -6,21 +6,22 @@ import subprocess
 
 builtin=["exit", "echo", "type", "pwd"]
 def execute_builtin(tokens):
-    if tokens[0] == "exit":
-        sys.exit()
-    elif tokens[0] == "echo":
-        [sys.stdout.write(args+" ") for args in tokens[1:]]
-        print()
-    elif tokens[0] == "type":
-        if tokens[1] in builtin:
-            print(f"{tokens[1]} is a shell builtin")
-        else:
-            if shutil.which(tokens[1]):
-                print(f"{tokens[1]} is {shutil.which(tokens[1])}")
+     match tokens[0]:
+        case "exit":
+             sys.exit()
+        case "echo":
+            [sys.stdout.write(args+" ") for args in tokens[1:]]
+            print()
+        case "type":
+            if tokens[1] in builtin:
+                print(f"{tokens[1]} is a shell builtin")
             else:
-                print(f"{tokens[1]}: not found")
-    elif tokens[0]=="pwd":
-        print(os.getcwd())
+                if shutil.which(tokens[1]):
+                    print(f"{tokens[1]} is {shutil.which(tokens[1])}")
+                else:
+                    print(f"{tokens[1]}: not found")
+        case "pwd":
+            print(os.getcwd())
 def main():
     while True:
         sys.stdout.write("$ ")
