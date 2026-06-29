@@ -38,6 +38,14 @@ def redirect_output(tokens):
         i = tokens.index("2>") + 1
         sys.stderr = open(tokens[i],'w')
         return tokens[:i-1]
+    elif ">>" in tokens or "1>>" in tokens:
+        i = tokens.index("1>>" if "1>>" in tokens else ">>") + 1
+        sys.stdout = open(tokens[i],'a')
+        return tokens[:i-1]
+    elif "2>>" in tokens:
+        i = tokens.index("2>>") + 1
+        sys.stderr = open(tokens[i],'a')
+        return tokens[:i-1]
     return tokens
 def reset_output():
     sys.stderr=sys.__stderr__
