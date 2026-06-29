@@ -54,7 +54,7 @@ def main():
             if tokens[0] in builtin:
                 execute_builtin(tokens)
             elif shutil.which(tokens[0]):
-                subprocess.run(tokens, stdout= sys.stdout)
+                subprocess.run(tokens, stdout= sys.stdout, stderr=sys.stderr)
             else:
                 print(f"{tokens[0]}: command not found")
         except KeyboardInterrupt:
