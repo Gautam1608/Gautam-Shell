@@ -28,17 +28,31 @@ def execute_builtin(tokens):
                 os.chdir(hpath)
             except FileNotFoundError as e:
                 print(f"cd: {hpath}: No such file or directory")
+
+def redirect_output(tokens):
+    if ">" in tokens or "1>" in tokens:
+        i = tokens.index("1>" if "1>" in tokens else ">") + 1
+        sys.stdout = open(tokens[i],'w')
+        tokens = tokens[:i-1]
+    elif "2>" in tokens:
+        i = tokens.index("2>") + 1
+        sys.stderr = open(tokens[i],'w')
+        tokens = tokens[:i-1]
+
+def reset_output():
+    sys.stderr=sys.__stderr__
+    sys.stdout=sys.__stdout__
+
+
 def main():
     while True:
         try:
-            sys.stdout = sys.__stdout__
+            reset_output()
             sys.stdout.write("$ ")
             raw_input = input()
             tokens=shlex.split(raw_input)
-            if ">" in tokens or "1>" in tokens:
-                i = tokens.index("1>" if "1>" in tokens else ">") + 1
-                sys.stdout = open(tokens[i],'w')
-                tokens = tokens[:i-1]
+            redirect_output(tokens)
+            
             if tokens[0] in builtin:
                 execute_builtin(tokens)
             elif shutil.which(tokens[0]):
