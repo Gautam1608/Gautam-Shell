@@ -36,7 +36,7 @@ def main():
             raw_input = input()
             tokens=shlex.split(raw_input)
             if ">" in tokens or "1>" in tokens:
-                i = tokens.index(f"{"1"*("1>" in tokens)}>") + 1
+                i = tokens.index("1>" if "1>" in tokens else ">") + 1
                 sys.stdout = open(tokens[i],'w')
                 tokens = tokens[:i-1]
             if tokens[0] in builtin:
