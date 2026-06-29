@@ -30,16 +30,23 @@ def execute_builtin(tokens):
                 print(f"cd: {hpath}: No such file or directory")
 def main():
     while True:
-        sys.stdout.write("$ ")
-        raw_input = input()
-        tokens=shlex.split(raw_input)
-        if tokens[0] in builtin:
-            execute_builtin(tokens)
-        elif shutil.which(tokens[0]):
-            subprocess.run(tokens)
-        else:
-            print(f"{tokens[0]}: command not found")
-
+        try:
+            sys.stdout = sys.__stdout__
+            sys.stdout.write("$ ")
+            raw_input = input()
+            tokens=shlex.split(raw_input)
+            if ">" in tokens:
+                i = tokens.index(">") + 1
+                sys.stdout = open(tokens[i],'w')
+                tokens = tokens[:i-1]
+            if tokens[0] in builtin:
+                execute_builtin(tokens)
+            elif shutil.which(tokens[0]):
+                subprocess.run(tokens, stdout= sys.stdout)
+            else:
+                print(f"{tokens[0]}: command not found")
+        except KeyboardInterrupt:
+            print()
 
 
 if __name__ == "__main__":
