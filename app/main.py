@@ -4,7 +4,7 @@ import shutil
 import shlex
 import subprocess
 
-builtin=["exit", "echo", "type"]
+builtin=["exit", "echo", "type", "pwd"]
 def execute_builtin(tokens):
     if tokens[0] == "exit":
         sys.exit()
@@ -19,6 +19,8 @@ def execute_builtin(tokens):
                 print(f"{tokens[1]} is {shutil.which(tokens[1])}")
             else:
                 print(f"{tokens[1]}: not found")
+    elif tokens[0]=="pwd":
+        print(os.getcwd())
 def main():
     while True:
         sys.stdout.write("$ ")
