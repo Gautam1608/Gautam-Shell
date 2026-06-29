@@ -24,9 +24,10 @@ def execute_builtin(tokens):
             print(os.getcwd())
         case "cd":
             try:
-                os.chdir(tokens[1])
+                hpath = os.path.expanduser(tokens[1])
+                os.chdir(hpath)
             except FileNotFoundError as e:
-                print(f"cd: {tokens[1]}: No such file or directory")
+                print(f"cd: {hpath}: No such file or directory")
 def main():
     while True:
         sys.stdout.write("$ ")
