@@ -80,10 +80,10 @@ def completer(text, state):
         else:
             path_dir = path.parent.resolve()
             path_text = path.name
-            options=[cmd for cmd in os.listdir(path_dir) if cmd.startswith(path_text)]
+            options=[str(path/cmd) for cmd in os.listdir(path_dir) if cmd.startswith(path_text)]
     else:
         options = [cmd for cmd in autocomplete_list if cmd.startswith(text)]
-        options=([cmd for cmd in os.listdir() if cmd.startswith(text)])
+        options.extend([cmd for cmd in os.listdir() if cmd.startswith(text)])
     if state < len(options):
         return options[state]+" "
     return None
