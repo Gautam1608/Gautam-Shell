@@ -84,17 +84,17 @@ def completer(text,state):
             options.extend([cmd for cmd in os.listdir() if cmd.startswith(text)])
         else:
             path = prev_path/Path(text)
-            prefix = ".\\" if not path.is_absolute else ""
+            prefix = "./" if not path.is_absolute() else ""
             if path.is_dir():
-                options = [prefix+str(path/cmd) for cmd in os.listdir(path)]
+                options = [prefix+str(path/cmd).as_posix() for cmd in os.listdir(path)]
             else:
                 path_dir = path.parent.absolute()
                 path_text = path.name
-                options = [cmd for cmd in os.listdir(path_dir) if cmd.startswith(path_text)]
+                options = [(path.parent/cmd).as_posix() for cmd in os.listdir(path_dir) if cmd.startswith(path_text)]
     if state < len(options):
         option = Path(options[state])
         if option.is_dir():
-            return str(option)+"/"
+            return option.as_posix()+"/"
         return options[state]+" "
     return None
 
