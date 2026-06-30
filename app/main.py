@@ -71,24 +71,19 @@ def reset_output():
     sys.stdout=sys.__stdout__
 
 def completer(text,state):
-    buffer = readline.get_line_buffer()
-    last_word = buffer.split()[-1] if buffer else ""
-    prev_path = Path(last_word)
-    if not prev_path.is_dir():
-        prev_path = Path()
     if not text:
-        options=([cmd for cmd in os.listdir(prev_path)])
+        options=([cmd for cmd in os.listdir()])
     else:
         if '/' not in text and '\\' not in text:
             options = [cmd for cmd in autocomplete_list if cmd.startswith(text)]
             options.extend([cmd for cmd in os.listdir() if cmd.startswith(text)])
         else:
-            path = prev_path/Path(text)
+            path = Path(text)
             prefix = "./" if not path.is_absolute() else ""
             if path.is_dir():
-                options = [prefix+str(path/cmd).as_posix() for cmd in os.listdir(path)]
+                options = [prefix+(path/cmd).as_posix() for cmd in os.listdir(path)]
             else:
-                path_dir = path.parent.absolute()
+                path_dir = path.parent.absolute() if path.parent.absolute().is_dir() else Path()
                 path_text = path.name
                 options = [(path.parent/cmd).as_posix() for cmd in os.listdir(path_dir) if cmd.startswith(path_text)]
     if state < len(options):
