@@ -3,6 +3,7 @@ import os
 import shutil
 import shlex
 import subprocess
+from pathlib import Path
 
 try:
     import readline
@@ -70,8 +71,19 @@ def reset_output():
     sys.stdout=sys.__stdout__
 
 def completer(text, state):
-    options = [cmd for cmd in autocomplete_list if cmd.startswith(text)]
-    options.extend([cmd for cmd in os.listdir() if cmd.startswith(text)])
+    if not text:
+        options=([cmd for cmd in os.listdir()])
+    elif "/" in text or "\\" in text:
+        path = Path(text)
+        if path.is_dir():
+            options=[str(path/cmd) for cmd in os.listdir(path.absolute())]
+        else:
+            path_dir = path.parent.resolve()
+            path_text = path.name
+            options=[cmd for cmd in os.listdir(path_dir) if cmd.startswith(path_text)]
+    else:
+        options = [cmd for cmd in autocomplete_list if cmd.startswith(text)]
+        options=([cmd for cmd in os.listdir() if cmd.startswith(text)])
     if state < len(options):
         return options[state]+" "
     return None
