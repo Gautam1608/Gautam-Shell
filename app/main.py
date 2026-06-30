@@ -94,7 +94,7 @@ def completer(text,state):
     if state < len(options):
         option = Path(options[state])
         if option.is_dir():
-            return str(option)+"\\"
+            return str(option)+"/"
         return options[state]+" "
     return None
 
@@ -105,13 +105,16 @@ def main():
         try:
             reset_output()
             raw_input = input("$ ")
-            tokens=redirect_output(shlex.split(raw_input,posix=False)) 
+            tokens=redirect_output(shlex.split(raw_input)) 
+            local_path = os.path.join(os.getcwd(), tokens[0])
             if not tokens:
                 continue   
             if tokens[0] in builtin:
                 execute_builtin(tokens)
             elif shutil.which(tokens[0]):
                 subprocess.run(tokens, stdout= sys.stdout, stderr=sys.stderr)
+            elif os.path.isfile(local_path) and os.access(local_path, os.X_OK):
+                subprocess.run(local_path, stdout= sys.stdout, stderr=sys.stderr)
             else:
                 print(f"{tokens[0]}: command not found")
         except KeyboardInterrupt:
