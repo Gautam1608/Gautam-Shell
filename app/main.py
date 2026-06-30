@@ -4,6 +4,18 @@ import shutil
 import shlex
 import subprocess
 
+try:
+    import readline
+except ImportError:
+    try:
+        from pyreadline3 import Readline
+        readline = Readline()
+        def input(txt):
+            readline.readline(txt)
+    except ImportError:
+        readline = None
+
+
 builtin=["exit", "echo", "type", "pwd","cd"]
 def execute_builtin(tokens):
      match tokens[0]:
@@ -51,14 +63,22 @@ def reset_output():
     sys.stderr=sys.__stderr__
     sys.stdout=sys.__stdout__
 
+def completer(text, state):
+    options = [cmd for cmd in builtin if cmd.startswith(text)]
+    if state < len(options):
+        return options[state]+" "
+    return None
 
 def main():
+    readline.set_completer(completer)
+    readline.parse_and_bind("tab: complete")
     while True:
         try:
             reset_output()
-            sys.stdout.write("$ ")
-            raw_input = input()
-            tokens=redirect_output(shlex.split(raw_input))            
+            raw_input = input("$ ")
+            tokens=redirect_output(shlex.split(raw_input)) 
+            if not tokens:
+                continue   
             if tokens[0] in builtin:
                 execute_builtin(tokens)
             elif shutil.which(tokens[0]):
