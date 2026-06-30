@@ -17,6 +17,11 @@ except ImportError:
 
 
 builtin=["exit", "echo", "type", "pwd","cd"]
+autocomplete_list=builtin.copy()
+for path in os.environ.get("PATH", "").split(os.pathsep):
+    if os.path.exists(path):
+        autocomplete_list.extend(os.listdir(path))
+
 def execute_builtin(tokens):
      match tokens[0]:
         case "exit":
@@ -64,14 +69,7 @@ def reset_output():
     sys.stdout=sys.__stdout__
 
 def completer(text, state):
-    options = [cmd for cmd in builtin if cmd.startswith(text)]
-    for path in os.environ.get("PATH", "").split(os.pathsep):
-        try:
-            for dir in os.listdir(path):
-                if dir.startswith(text):
-                    options.append(dir)
-        except:
-            continue
+    options = [cmd for cmd in autocomplete_list if cmd.startswith(text)]
     if state < len(options):
         return options[state]+" "
     return None
