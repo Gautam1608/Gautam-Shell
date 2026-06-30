@@ -22,6 +22,7 @@ for path in os.environ.get("PATH", "").split(os.pathsep):
     if os.path.exists(path):
         autocomplete_list.extend(os.listdir(path))
 
+
 def execute_builtin(tokens):
      match tokens[0]:
         case "exit":
@@ -70,6 +71,7 @@ def reset_output():
 
 def completer(text, state):
     options = [cmd for cmd in autocomplete_list if cmd.startswith(text)]
+    options.extend([cmd for cmd in os.listdir() if cmd.startswith(text)])
     if state < len(options):
         return options[state]+" "
     return None
