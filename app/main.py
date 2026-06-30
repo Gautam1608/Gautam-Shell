@@ -70,21 +70,31 @@ def reset_output():
     sys.stderr=sys.__stderr__
     sys.stdout=sys.__stdout__
 
-def completer(text, state):
+def completer(text,state):
+    buffer = readline.get_line_buffer()
+    last_word = buffer.split()[-1] if buffer else ""
+    prev_path = Path(last_word)
+    if not prev_path.is_dir():
+        prev_path = Path()
     if not text:
-        options=([cmd for cmd in os.listdir()])
-    elif "/" in text or "\\" in text:
-        path = Path(text)
-        if path.is_dir():
-            options=[str(path/cmd) for cmd in os.listdir(path.absolute())]
-        else:
-            path_dir = path.parent.resolve()
-            path_text = path.name
-            options=[str(path/cmd) for cmd in os.listdir(path_dir) if cmd.startswith(path_text)]
+        options=([cmd for cmd in os.listdir(prev_path)])
     else:
-        options = [cmd for cmd in autocomplete_list if cmd.startswith(text)]
-        options.extend([cmd for cmd in os.listdir() if cmd.startswith(text)])
+        if '/' not in text and '\\' not in text:
+            options = [cmd for cmd in autocomplete_list if cmd.startswith(text)]
+            options.extend([cmd for cmd in os.listdir() if cmd.startswith(text)])
+        else:
+            path = prev_path/Path(text)
+            prefix = ".\\" if not path.is_absolute else ""
+            if path.is_dir():
+                options = [prefix+str(path/cmd) for cmd in os.listdir(path)]
+            else:
+                path_dir = path.parent.absolute()
+                path_text = path.name
+                options = [cmd for cmd in os.listdir(path_dir) if cmd.startswith(path_text)]
     if state < len(options):
+        option = Path(options[state])
+        if option.is_dir():
+            return str(option)+"\\"
         return options[state]+" "
     return None
 
@@ -95,7 +105,7 @@ def main():
         try:
             reset_output()
             raw_input = input("$ ")
-            tokens=redirect_output(shlex.split(raw_input)) 
+            tokens=redirect_output(shlex.split(raw_input,posix=False)) 
             if not tokens:
                 continue   
             if tokens[0] in builtin:
