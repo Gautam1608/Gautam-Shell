@@ -65,6 +65,13 @@ def reset_output():
 
 def completer(text, state):
     options = [cmd for cmd in builtin if cmd.startswith(text)]
+    for path in os.environ.get("PATH", "").split(os.pathsep):
+        try:
+            for dir in os.listdir(path):
+                if dir.startswith(text):
+                    options.append(dir)
+        except:
+            continue
     if state < len(options):
         return options[state]+" "
     return None
