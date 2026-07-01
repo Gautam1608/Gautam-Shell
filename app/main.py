@@ -86,6 +86,7 @@ def completer(text,state):
                 path_dir = path.parent.absolute() if path.parent.absolute().is_dir() else Path()
                 path_text = path.name
                 options = [(path.parent/cmd).as_posix() for cmd in os.listdir(path_dir) if cmd.startswith(path_text)]
+    print(options)
     if state < len(options):
         option = Path(options[state])
         if option.is_dir():
