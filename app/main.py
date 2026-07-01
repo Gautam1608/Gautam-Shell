@@ -6,12 +6,12 @@ import subprocess
 from pathlib import Path
 import logging
 
-logging.basicConfig(
-    filename='shell.log', 
-    level=logging.DEBUG, 
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
+# logging.basicConfig(
+#     filename='shell.log', 
+#     level=logging.DEBUG, 
+#     format='%(asctime)s - %(levelname)s - %(message)s'
+# )
+# logger = logging.getLogger(__name__)
 try:
     import readline
 except ImportError:
@@ -78,33 +78,33 @@ def reset_output():
     sys.stdout=sys.__stdout__
 
 def completer(text,state):
-    logger.debug(f"Text and State: {text} and {state}")
+    # logger.debug(f"Text and State: {text} and {state}")
     if not text:
         options=([cmd for cmd in os.listdir()])
     else:
         if '/' not in text and '\\' not in text:
             options = [cmd for cmd in autocomplete_list if cmd.startswith(text)]
             options.extend([cmd for cmd in os.listdir() if cmd.startswith(text)])
-            logger.debug(f"options are: {options}")
+            # logger.debug(f"options are: {options}")
         else:
             path = Path(text)
             prefix = "./" if not path.is_absolute() else ""
             if path.is_dir():
                 options = [prefix+(path/cmd).as_posix() for cmd in os.listdir(path)]
-                logger.debug(f"text is a path, options are: {options}")
+                # logger.debug(f"text is a path, options are: {options}")
             else:
                 path_dir = path.parent.absolute() if path.parent.absolute().is_dir() else Path()
                 path_text = path.name
                 options = [(path.parent/cmd).as_posix() for cmd in os.listdir(path_dir) if cmd.startswith(path_text)]
-                logger.debug(f"text is not a path, options are: {options}")
+                # logger.debug(f"text is not a path, options are: {options}")
     if state < len(options):
         option = Path(options[state])
         if option.is_dir():
-            logger.debug(f"returning :{option.as_posix()+"/"}")
+            # logger.debug(f"returning :{option.as_posix()+"/"}")
             return option.as_posix()+"/"
-        logger.debug(f"returning: {options[state]+" "}")
+        # logger.debug(f"returning: {options[state]+" "}")
         return options[state]+" "
-    logger.debug("returning None")
+    # logger.debug("returning None")
     return None
 
 def main():
