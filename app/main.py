@@ -33,7 +33,7 @@ for path in os.environ.get("PATH", "").split(os.pathsep):
         autocomplete_list.extend(os.listdir(path))
 
 
-def execute_builtin(tokens):
+def execute_builtin(tokens: list[str]):
      match tokens[0]:
         case "exit":
              sys.exit()
@@ -56,6 +56,9 @@ def execute_builtin(tokens):
                 os.chdir(hpath)
             except FileNotFoundError as e:
                 print(f"cd: {hpath}: No such file or directory")
+        case "complete":
+             if "-p" in tokens:
+                 print(f"complete: {tokens[2]}: no completion specification")
 
 def redirect_output(tokens):
     if ">" in tokens or "1>" in tokens:
