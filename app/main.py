@@ -99,7 +99,7 @@ def completer(text,state):
             spec_file = completion_dict[line_tokens[0]]
             if os.path.isfile(spec_file) and os.access(spec_file, os.X_OK):
                 result = subprocess.run([spec_file,line_tokens[0],text,prev_token],
-                                         capture_output=True, text=True, env = {"COMP_LINE": line, "COMP_POINT": readline.get_endidx()})
+                                         capture_output=True, text=True, env = {"COMP_LINE": line, "COMP_POINT": len(line)})
                 options = result.stdout.splitlines()
     else:
         if '/' not in text and '\\' not in text:
