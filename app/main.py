@@ -97,7 +97,7 @@ def completer(text,state):
             prev_token = line_tokens[line_tokens.index(text) - 1] if line_tokens.index(text) > 1 else ""
             spec_file = completion_dict[line_tokens[0]]
             if os.path.isfile(spec_file) and os.access(spec_file, os.X_OK):
-                result = subprocess.run([spec_file,text,prev_token], capture_output=True, text=True)
+                result = subprocess.run([spec_file,line_tokens[0],text,prev_token], capture_output=True, text=True)
                 options = result.stdout.splitlines()
     else:
         if '/' not in text and '\\' not in text:
