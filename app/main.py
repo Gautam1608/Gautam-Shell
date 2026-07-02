@@ -64,7 +64,8 @@ def execute_builtin(tokens: list[str]):
                     else:
                         print(f"complete: {tokens[2]}: no completion specification")
                 case "-C":
-                    completion_dict.update({tokens[3]: tokens[2]})
+                    completion_dict[tokens[3]]= tokens[2]
+
 def redirect_output(tokens):
     if ">" in tokens or "1>" in tokens:
         i = tokens.index("1>" if "1>" in tokens else ">") + 1
@@ -89,8 +90,16 @@ def reset_output():
 
 def completer(text,state):
     # logger.debug(f"Text and State: {text} and {state}")
+    line_tokens = readline.get_line_buffer().split(" ")
     if not text:
         options=([cmd for cmd in os.listdir()])
+    elif line_tokens[0] in completion_dict:
+            spec_file = completion_dict[line_tokens[0]]
+            if os.path.isfile(spec_file) and os.access(spec_file, os.X_OK):
+                result = subprocess.run([spec_file], capture_output=True, text=True)
+                candidates = result.stdout.splitlines()
+                if state < len(candidates):
+                    return candidates[state] + " "
     else:
         if '/' not in text and '\\' not in text:
             options = [cmd for cmd in autocomplete_list if cmd.startswith(text)]
