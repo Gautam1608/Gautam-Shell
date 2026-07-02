@@ -26,7 +26,7 @@ except ImportError:
         readline = None
 
 
-builtin=["exit", "echo", "type", "pwd","cd"]
+builtin=["exit", "echo", "type", "pwd","cd", "complete"]
 autocomplete_list=builtin.copy()
 for path in os.environ.get("PATH", "").split(os.pathsep):
     if os.path.exists(path):
