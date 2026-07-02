@@ -95,7 +95,7 @@ def completer(text,state):
     if not text and line_tokens[0] not in completion_dict:
         options=([cmd for cmd in os.listdir()])
     elif line_tokens[0] in completion_dict:
-            prev_token = line_tokens[line_tokens.index(text) - 1] if line_tokens.index(text) > 1 else ""
+            prev_token = line_tokens[line_tokens.index(text) - 1] if line_tokens.index(text) > 0 else ""
             spec_file = completion_dict[line_tokens[0]]
             if os.path.isfile(spec_file) and os.access(spec_file, os.X_OK):
                 result = subprocess.run([spec_file,line_tokens[0],text,prev_token],
