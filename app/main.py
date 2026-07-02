@@ -25,7 +25,7 @@ except ImportError:
     except ImportError:
         readline = None
 
-
+completion_dict = {}
 builtin=["exit", "echo", "type", "pwd","cd", "complete"]
 autocomplete_list=builtin.copy()
 for path in os.environ.get("PATH", "").split(os.pathsep):
@@ -57,9 +57,14 @@ def execute_builtin(tokens: list[str]):
             except FileNotFoundError as e:
                 print(f"cd: {hpath}: No such file or directory")
         case "complete":
-             if "-p" in tokens:
-                 print(f"complete: {tokens[2]}: no completion specification")
-
+            match tokens[1]:
+                case "-p":
+                    if tokens[2] in completion_dict:
+                        print(f"complete -C '{completion_dict.get(tokens[2])}' {tokens[2]}")
+                    else:
+                        print(f"complete: {tokens[2]}: no completion specification")
+                case "-C":
+                    completion_dict.update({tokens[3]: tokens[2]})
 def redirect_output(tokens):
     if ">" in tokens or "1>" in tokens:
         i = tokens.index("1>" if "1>" in tokens else ">") + 1
