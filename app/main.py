@@ -81,7 +81,6 @@ def reset_output():
 
 def completer(text,state):
     # logger.debug(f"Text and State: {text} and {state}")
-    print(text)
     if not text:
         options=([cmd for cmd in os.listdir()])
     else:
@@ -100,7 +99,7 @@ def completer(text,state):
                 path_text = path.name
                 options = [(path.parent/cmd).as_posix() for cmd in os.listdir(path_dir) if cmd.startswith(path_text)]
                 # logger.debug(f"text is not a path, options are: {options}")
-    print(f"options: {options}, path: {Path(text).as_posix}, text:{text}")
+    #print(f"options: {options}, path: {Path(text).as_posix}, text:{text}")
     if state < len(options):
         option = Path(options[state])
         if option.is_dir():
