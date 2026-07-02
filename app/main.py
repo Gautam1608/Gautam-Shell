@@ -90,9 +90,9 @@ def completer(text,state):
             # logger.debug(f"options are: {options}")
         else:
             path = Path(text)
-            prefix = "./" if not path.is_absolute() else ""
+            #prefix = "./" if not path.is_absolute() else ""
             if path.is_dir():
-                options = [prefix+(path/cmd).as_posix() for cmd in os.listdir(path)]
+                options = [(path/cmd).as_posix() for cmd in os.listdir(path)]
                 # logger.debug(f"text is a path, options are: {options}")
             else:
                 path_dir = path.parent.absolute() if path.parent.absolute().is_dir() else Path()
