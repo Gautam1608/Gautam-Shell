@@ -18,6 +18,7 @@ except ImportError:
     try:
         from pyreadline3 import Readline
         readline = Readline()
+        readline.set_completer_delims(" \t\n")
         def input(txt):
             readline.readline(txt)
     except ImportError:
