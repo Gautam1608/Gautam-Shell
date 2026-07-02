@@ -65,6 +65,8 @@ def execute_builtin(tokens: list[str]):
                         print(f"complete: {tokens[2]}: no completion specification")
                 case "-C":
                     completion_dict[tokens[3]]= tokens[2]
+                case "-r":
+                    del completion_dict[tokens[2]]
 
 def redirect_output(tokens):
     if ">" in tokens or "1>" in tokens:
