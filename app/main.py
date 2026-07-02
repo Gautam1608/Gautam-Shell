@@ -135,7 +135,9 @@ def main():
         try:
             reset_output()
             raw_input = input("$ ")
-            tokens=redirect_output(shlex.split(raw_input)) 
+            tokens=redirect_output(shlex.split(raw_input))
+            if not tokens:
+                continue
             local_path = os.path.join(os.getcwd(), tokens[0])
             if not tokens:
                 continue   

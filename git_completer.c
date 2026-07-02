@@ -27,8 +27,10 @@ int main(int argc, char *argv[]) {
                 printf("show\n");
             }
         }
-        else if (strcmp(current, "remote") == 0) {
+        else if (strncmp(current, "remote",2) == 0) {
             printf("remote\n");
+            printf("rebase\n");
+            printf("reset\n");
         }
     }
 
