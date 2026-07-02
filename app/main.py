@@ -91,15 +91,13 @@ def reset_output():
 def completer(text,state):
     # logger.debug(f"Text and State: {text} and {state}")
     line_tokens = readline.get_line_buffer().split(" ")
-    if not text:
+    if not text and line_tokens[0] not in completion_dict:
         options=([cmd for cmd in os.listdir()])
     elif line_tokens[0] in completion_dict:
             spec_file = completion_dict[line_tokens[0]]
             if os.path.isfile(spec_file) and os.access(spec_file, os.X_OK):
                 result = subprocess.run([spec_file], capture_output=True, text=True)
-                candidates = result.stdout.splitlines()
-                if state < len(candidates):
-                    return candidates[state] + " "
+                options = result.stdout.splitlines()
     else:
         if '/' not in text and '\\' not in text:
             options = [cmd for cmd in autocomplete_list if cmd.startswith(text)]
