@@ -14,6 +14,7 @@ import logging
 # logger = logging.getLogger(__name__)
 try:
     import readline
+    readline.set_completer_delims(" \t\n")
 except ImportError:
     try:
         from pyreadline3 import Readline
