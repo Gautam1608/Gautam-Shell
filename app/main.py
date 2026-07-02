@@ -80,6 +80,7 @@ def reset_output():
 
 def completer(text,state):
     # logger.debug(f"Text and State: {text} and {state}")
+    print(text)
     if not text:
         options=([cmd for cmd in os.listdir()])
     else:
