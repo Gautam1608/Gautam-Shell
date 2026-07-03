@@ -147,15 +147,17 @@ def main():
                 execute_builtin(tokens)
             elif shutil.which(tokens[0]):
                 if tokens[-1]=='&':
-                    subprocess.Popen(tokens[:-1], stdout= sys.stdout, stderr=sys.stderr)
+                    process = subprocess.Popen(tokens[:-1], shell=True)
+                    print(f"[1] {process.pid}")
                 else:
                     subprocess.run(tokens, stdout= sys.stdout, stderr=sys.stderr)
 
             elif os.path.isfile(local_path) and os.access(local_path, os.X_OK):
                 if tokens[-1]=='&':
-                    subprocess.Popen(local_path, stdout= sys.stdout, stderr=sys.stderr)
+                    process = subprocess.Popen(tokens[:-1], shell=True)
+                    print(f"[1] {process.pid}")
                 else:
-                    subprocess.run(local_path, stdout= sys.stdout, stderr=sys.stderr)
+                    subprocess.run([local_path].append(tokens[1:]), stdout= sys.stdout, stderr=sys.stderr)
             else:
                 print(f"{tokens[0]}: command not found")
         except KeyboardInterrupt:
