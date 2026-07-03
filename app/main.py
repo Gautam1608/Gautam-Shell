@@ -26,7 +26,7 @@ except ImportError:
         readline = None
 
 completion_dict = {}
-builtin=["exit", "echo", "type", "pwd","cd", "complete"]
+builtin=["exit", "echo", "type", "pwd","cd", "complete", "jobs"]
 autocomplete_list=builtin.copy()
 for path in os.environ.get("PATH", "").split(os.pathsep):
     if os.path.exists(path):
@@ -146,9 +146,16 @@ def main():
             if tokens[0] in builtin:
                 execute_builtin(tokens)
             elif shutil.which(tokens[0]):
-                subprocess.run(tokens, stdout= sys.stdout, stderr=sys.stderr)
+                if tokens[-1]=='&':
+                    subprocess.Popen(tokens[:-1], stdout= sys.stdout, stderr=sys.stderr)
+                else:
+                    subprocess.run(tokens, stdout= sys.stdout, stderr=sys.stderr)
+
             elif os.path.isfile(local_path) and os.access(local_path, os.X_OK):
-                subprocess.run(local_path, stdout= sys.stdout, stderr=sys.stderr)
+                if tokens[-1]=='&':
+                    subprocess.Popen(local_path, stdout= sys.stdout, stderr=sys.stderr)
+                else:
+                    subprocess.run(local_path, stdout= sys.stdout, stderr=sys.stderr)
             else:
                 print(f"{tokens[0]}: command not found")
         except KeyboardInterrupt:
